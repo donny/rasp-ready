@@ -12,3 +12,29 @@ Installing Raspbian to the card (on Mac OS X):
     $ sudo dd bs=1m if=`ls *raspbian.img` of=/dev/disk1
     $ diskutil eject /dev/disk1
 
+Perform initial setup:
+
+    $ ssh pi@raspberry
+    $ sudo raspi-config
+    $ sudo apt-get update
+
+For web display (need to enable boot to desktop with `raspi-config`):
+
+    $ sudo apt-get -y install ttf-mscorefonts-installer unclutter
+    $ sudo ex /etc/lightdm/lightdm.conf <<INPUT
+    /SeatDefaults
+    :a
+    xserver-command=X -s 0 dpms
+    .
+    :x
+    INPUT
+    $ sudo ex /etc/xdg/lxsession/LXDE/autostart <<INPUT
+    :%d
+    :i
+    @xset s off
+    @xset -dpms
+    @xset s noblank
+    @midori -e Fullscreen -a http://google.com
+    .
+    :x
+    INPUT
